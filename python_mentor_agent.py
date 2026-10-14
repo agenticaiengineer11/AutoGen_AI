@@ -31,6 +31,7 @@ async def main():
             Explain concepts clearly and provide beginner-friendly
             guidance with simple examples.
             """,
+            verbose= True
         )
 
         result = await assistant.run(
