@@ -10,6 +10,9 @@ def multiply(a: int, b: int) -> int:
     """Multiply two integers and return the result."""
     return a * b
 
+def addition(a:int , b:int)-> int:
+    """Add two integers and return the result."""
+    return a + b
 
 async def main():
     load_dotenv()
@@ -27,16 +30,16 @@ async def main():
         assistant = AssistantAgent(
             name="calculator_agent",
             model_client=model_client,
-            tools=[multiply],
+            tools=[multiply, addition],
             system_message=(
                 "You are a calculator assistant. "
-                "Use the multiply tool for multiplication questions. "
+                "Use the multiply tool for multiplication questions and the addition tool for addition questions. "
                 "Explain the result clearly."
             ),
         )
 
         result = await assistant.run(
-            task="What is 125 multiplied by 48? Use the tool."
+            task="What is 125 plus 48?"
         )
 
         for message in result.messages:
