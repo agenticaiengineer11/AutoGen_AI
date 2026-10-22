@@ -7,11 +7,24 @@ import asyncio
 
 
 def multiply(a: int, b: int) -> int:
-    """Multiply two integers and return the result."""
+    """Multiply two integers."""
+    if not isinstance(a, int) or isinstance(a, bool):
+        raise ValueError("a must be an integer.")
+
+    if not isinstance(b, int) or isinstance(b, bool):
+        raise ValueError("b must be an integer.")
+
     return a * b
 
 def addition(a:int , b:int)-> int:
-    """Add two integers and return the result."""
+    """Add two integers. Booleans are not allowed."""
+
+    if type(a) is not int:
+        raise ValueError("a must be an integer, not a boolean.")
+
+    if type(b) is not int:
+        raise ValueError("b must be an integer, not a boolean.")
+
     return a + b
 
 async def main():
@@ -39,7 +52,7 @@ async def main():
         )
 
         result = await assistant.run(
-            task="What is 125 plus 48?"
+            task="Use the add tool to calculate True + 48"
         )
 
         for message in result.messages:
