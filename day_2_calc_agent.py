@@ -1,3 +1,4 @@
+
 from autogen_agentchat.agents import AssistantAgent
 from autogen_ext.models.openai import OpenAIChatCompletionClient
 from dotenv import load_dotenv
@@ -7,16 +8,18 @@ import asyncio
 
 
 def multiply(a: int, b: int) -> int:
-    """Multiply two integers."""
-    if not isinstance(a, int) or isinstance(a, bool):
-        raise ValueError("a must be an integer.")
+    """Multiply two integers. Booleans are not allowed."""
 
-    if not isinstance(b, int) or isinstance(b, bool):
-        raise ValueError("b must be an integer.")
+    if type(a) is not int:
+        raise ValueError("a must be an integer, not a boolean.")
+
+    if type(b) is not int:
+        raise ValueError("b must be an integer, not a boolean.")
 
     return a * b
 
-def addition(a:int , b:int)-> int:
+
+def addition(a: int, b: int) -> int:
     """Add two integers. Booleans are not allowed."""
 
     if type(a) is not int:
@@ -26,6 +29,7 @@ def addition(a:int , b:int)-> int:
         raise ValueError("b must be an integer, not a boolean.")
 
     return a + b
+
 
 async def main():
     load_dotenv()
@@ -40,26 +44,30 @@ async def main():
     )
 
     try:
-        assistant = AssistantAgent(
+        calculator_agent = AssistantAgent(
             name="calculator_agent",
             model_client=model_client,
-            tools=[multiply, addition],
+            tools=[addition, multiply],
+            max_tool_iterations = 5,
             system_message=(
-                "You are a calculator assistant. "
-                "Use the multiply tool for multiplication questions and the addition tool for addition questions. "
-                "Explain the result clearly."
+                "You are a calculator agent. "
+                "Use the provided tools for calculations. "
+                "For multi-step calculations, use the result "
+                "of one operation as the input to the next. "
+                "For the user's requested arithmetic, use the tools "
+                "rather than calculating mentally."
             ),
         )
 
-        result = await assistant.run(
-            task="Use the add tool to calculate True + 48"
+        result = await calculator_agent.run(
+            task="Add 10 and 20, then multiply the result by 3."
         )
 
         for message in result.messages:
             print("\n" + "=" * 40)
             print("SOURCE:", message.source)
             print("TYPE:", type(message).__name__)
-            print("CONTENT:", message.content)
+            print("CONTENT:", repr(message.content))
 
     finally:
         await model_client.close()
