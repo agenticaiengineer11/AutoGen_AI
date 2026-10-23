@@ -46,14 +46,17 @@ async def main():
             system_message=(
                 "You are a calculation reviewer. "
                 "Check the previous agent's arithmetic result. "
-                "Explain briefly whether the result is correct."
+                "If it is correct, explain briefly and end your response "
+                "with the exact word APPROVED. "
+                "If it is incorrect, explain the issue."
             ),
         )
-
+        termination = TextMentionTermination("Approved")
         team = SelectorGroupChat(
             participants=[calculator, reviewer],
             model_client=model_client,
             max_turns=4,
+            termination_condition=termination,
         )
 
         result = await team.run(
