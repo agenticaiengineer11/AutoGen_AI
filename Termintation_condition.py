@@ -2,7 +2,7 @@
 import asyncio
 import os
 from dotenv import load_dotenv
-from autogen_agentchat.conditions import TextMentionTermination
+from autogen_agentchat.conditions import TextMentionTermination, MaxMessageTermination
 from autogen_agentchat.agents import AssistantAgent
 from autogen_agentchat.teams import SelectorGroupChat
 from autogen_ext.models.openai import OpenAIChatCompletionClient
@@ -51,12 +51,14 @@ async def main():
                 "If it is incorrect, explain the issue."
             ),
         )
-        termination = TextMentionTermination("APPROVED")
+        text_termination = TextMentionTermination("APPROVED")
+        max_message_termination = MaxMessageTermination(5)
+        termination = text_termination | max_message_termination
         team = SelectorGroupChat(
             participants=[calculator, reviewer],
             model_client=model_client,
-            max_turns=4,
             termination_condition=termination,
+            max_turns = 6,
         )
 
         result = await team.run(
