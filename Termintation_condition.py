@@ -53,7 +53,7 @@ async def main():
         )
         text_termination = TextMentionTermination("APPROVED")
         max_message_termination = MaxMessageTermination(5)
-        termination = text_termination | max_message_termination
+        termination = text_termination & max_message_termination
         team = SelectorGroupChat(
             participants=[calculator, reviewer],
             model_client=model_client,
