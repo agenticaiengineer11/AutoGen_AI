@@ -60,7 +60,7 @@ async def main():
         )
 
         result = await team.run(
-            task="Calculate 10 + 20 and have the reviewed result."
+            task="Calculate 10 + 20 and review the result."
         )
 
         for message in result.messages:
