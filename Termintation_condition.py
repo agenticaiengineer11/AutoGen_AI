@@ -51,7 +51,7 @@ async def main():
                 "If it is incorrect, explain the issue."
             ),
         )
-        termination = TextMentionTermination("Approved")
+        termination = TextMentionTermination("APPROVED")
         team = SelectorGroupChat(
             participants=[calculator, reviewer],
             model_client=model_client,
