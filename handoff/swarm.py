@@ -12,6 +12,7 @@ async def main():
 
     try:
         triage_agent  = AssistantAgent(
+            name=  "triage_agent",
             model_client=model_client,
             handoffs=["research_agent"],
             system_message="""
