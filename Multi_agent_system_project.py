@@ -60,7 +60,6 @@ def calculate_sales_metrics(
 async def main():
     model_client = OpenAIChatCompletionClient(
         model="gpt-4o-mini",
-        parallel_tool_calls=False,
     )
 
     try:
@@ -92,14 +91,46 @@ async def main():
         reviewer = AssistantAgent(
             name="reviewer",
             model_client=model_client,
-            system_message="""
-            You are a careful business report reviewer.
-            Check the analyst's findings against the original data
-            and verify that the metrics match the calculator output.
-            Do not invent or change figures.
-            If everything is consistent, state APPROVED.
-            If something is wrong, state REJECTED and explain why.
+            
+            system_message = """
+                You are a strict but fair financial report reviewer.
+
+                Review the analyst's findings against the original sales data
+                and independently verify every calculated metric.
+
+                Verification rules:
+                    1. Units growth percentage:
+                        ((Tuesday units - Monday units) / Monday units) * 100
+
+                    2. Revenue growth percentage:
+                        ((Tuesday revenue - Monday revenue) / Monday revenue) * 100
+
+                    3. Revenue per unit:
+                        Revenue / Units sold
+
+                    Approval rules:
+                        - Approve the report if all figures are mathematically correct
+                        and consistent with the original data.
+                    - Reject only if you identify a specific, actual error.
+                    - Do not reject a report merely because the explanation is
+                        confusing if all metrics are correct.
+                    - Never claim a metric is incorrect and then confirm it is correct.
+                    - If rejecting, identify the exact incorrect value and provide
+                        the correct value.
+                    - If all metrics are correct, your final verdict must be APPROVED.
+
+                    Return your review in this format:
+
+                VERIFICATION:
+                - List each metric and whether it is correct.
+
+                ISSUES:
+                - List actual errors, or write "None".
+
+            FINAL VERDICT:
+            APPROVED or REJECTED
             """,
+
         )
 
         sales_data = """
