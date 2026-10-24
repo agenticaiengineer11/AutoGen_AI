@@ -57,6 +57,10 @@ async def main():
                     hand off to math_agent first.
                 4. Do not answer the user's question yourself.
                 5. Only hand off to the configured specialist agents.
+                6. Choose exactly ONE specialist per handoff.
+                    Never request multiple handoffs in the same response.
+                    For requests involving both explanation and calculation,
+                    hand off to math_agent first.
             """,
 
         )
