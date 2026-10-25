@@ -1,0 +1,19 @@
+{
+  "type": "AssistantAgentState",
+  "version": "1.0.0",
+  "llm_context": {
+    "messages": [
+      {
+        "content": "Our project code is ALPHA-27. Monday sales were 120 units. Confirm these facts briefly.",
+        "source": "user",
+        "type": "UserMessage"
+      },
+      {
+        "content": "Your project code is ALPHA-27, and Monday's sales were 120 units.",
+        "thought": null,
+        "source": "sales_assistant",
+        "type": "AssistantMessage"
+      }
+    ]
+  }
+}
