@@ -1,4 +1,3 @@
-
 import asyncio
 import json
 
@@ -24,8 +23,6 @@ async def main():
                 "Do not invent missing information."
             ),
         )
-
-        # Step 1: Give the agent information
         result1 = await agent1.run(
             task=(
                 "Our project code is ALPHA-27. "
@@ -37,15 +34,12 @@ async def main():
         print("\n--- FIRST RESPONSE ---")
         print(result1.messages[-1].content)
 
-        # Step 2: Save the agent's state
         saved_state = await agent1.save_state()
 
         with open("sales_agent_state.json", "w", encoding="utf-8") as file:
             json.dump(saved_state, file, indent=2)
 
         print("\nAgent state saved successfully.")
-
-        # Step 3: Create a fresh agent
         agent2 = AssistantAgent(
             name="sales_assistant",
             model_client=model_client,
@@ -55,14 +49,11 @@ async def main():
                 "Do not invent missing information."
             ),
         )
-
-        # Step 4: Load the previously saved state
         with open("sales_agent_state.json", "r", encoding="utf-8") as file:
             loaded_state = json.load(file)
 
         await agent2.load_state(loaded_state)
 
-        # Step 5: Ask about the earlier information
         result2 = await agent2.run(
             task="What was our project code and Monday's sales?"
         )
